@@ -27,6 +27,23 @@ function showProducts() {
                 console.log(`${row.item_id.toString().padStart(2,' ')}  ${row.product_name.padEnd(25,' ')} ${row.department_name.padEnd(20,' ')} $ ${row.price.toFixed(2).padStart(6,' ')} ${row.stock_quantity.toString().padStart(8,' ')}`);
             });
             console.log('\n');
+            
+            inquirer.prompt([
+                {
+                    name: "id",
+                    message: "Enter the ID of the product you would like to purchase:",
+                    type: "number"
+                },
+                {
+                    name: "qty",
+                    message: "Enter the quantity:",
+                    type: "number"
+                }
+            ]).then(function(response) {
+                
+                    
+            
+            });
 
             connection.end();
         }
