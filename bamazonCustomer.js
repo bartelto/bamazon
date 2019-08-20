@@ -5,8 +5,6 @@ let mysql = require('mysql');
 let colors = require('colors');
 let inquirer = require('inquirer');
 
-console.log(keys.password);
-
 let connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
