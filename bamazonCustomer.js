@@ -1,12 +1,17 @@
+require("dotenv").config();
+
+let keys = require("./keys.js");
 let mysql = require('mysql');
 let colors = require('colors');
 let inquirer = require('inquirer');
+
+console.log(keys.password);
 
 let connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "H0rizon$",
+    password: keys.mysql.password,
     database: "bamazon"
 });
 
