@@ -53,15 +53,17 @@ function showOptions() {
 
 function viewSales() {
     connection.query(
-        "SELECT * FROM products ORDER BY department_name",
+        "SELECT department_id, " +
+        "departments.department_name, " +
+        "overhead_costs, " +
+        "SUM(products.product_sales) AS product_sales, " + 
+        "SUM(products.product_sales) - overhead_costs AS total_profit " + 
+        "FROM departments " +
+        "INNER JOIN products ON departments.department_name = products.department_name " +
+        "GROUP BY department_id;",
         function(err, res) {
             if (err) throw err;
-            console.log(`\n${"ID".padEnd(2,' ')}  ${"PRODUCT NAME".padEnd(25,' ')} ${"DEPARTMENT".padEnd(20,' ')}   ${"PRICE".padStart(6,' ')} ${"QTY".padStart(8,' ')}`.blue);
-            console.log("".padEnd(68,"-").bold);
-            res.forEach(function(row){
-                console.log(`${row.item_id.toString().padStart(2,' ')}  ${row.product_name.padEnd(25,' ')} ${row.department_name.padEnd(20,' ')} $ ${row.price.toFixed(2).padStart(6,' ')} ${row.stock_quantity.toString().padStart(8,' ')}`);
-            });
-            console.log('\n');
+            console.log(res);
 
             showOptions();
         }
