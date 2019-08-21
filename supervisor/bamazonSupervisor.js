@@ -4,6 +4,7 @@ let keys = require("../keys.js");
 let mysql = require('mysql');
 let colors = require('colors');
 let inquirer = require('inquirer');
+const {table} = require('table');
 
 let connection = mysql.createConnection({
     host: "localhost",
@@ -52,6 +53,7 @@ function showOptions() {
 }
 
 function viewSales() {
+    // only shows departments for which there are products in the 'products' table
     connection.query(
         "SELECT department_id, " +
         "departments.department_name, " +
@@ -63,92 +65,51 @@ function viewSales() {
         "GROUP BY department_id;",
         function(err, res) {
             if (err) throw err;
-            console.log(res);
-
-            showOptions();
-        }
-    );
-    
-}
-
-function viewLowInventory() {
-    connection.query(
-        "SELECT * FROM products WHERE stock_quantity < 5 ORDER BY department_name",
-        function(err, res) {
-            if (err) throw err;
-            console.log(`\n${"ID".padEnd(2,' ')}  ${"PRODUCT NAME".padEnd(25,' ')} ${"DEPARTMENT".padEnd(20,' ')}   ${"PRICE".padStart(6,' ')} ${"QTY".padStart(8,' ')}`.blue);
-            console.log("".padEnd(68,"-").bold);
-            res.forEach(function(row){
-                console.log(`${row.item_id.toString().padStart(2,' ')}  ${row.product_name.padEnd(25,' ')} ${row.department_name.padEnd(20,' ')} $ ${row.price.toFixed(2).padStart(6,' ')} ${row.stock_quantity.toString().padStart(8,' ')}`);
+            let data = [];
+            //let headers = [];
+            data.push(Object.keys(res[0])); // headers
+            res.forEach(function(row1) {
+                let row = [];
+                row.push(row1.department_id);
+                row.push(row1.department_name);
+                row.push(row1.overhead_costs.toFixed(2));
+                row.push(row1.product_sales.toFixed(2));
+                row.push(row1.total_profit.toFixed(2));
+                data.push(row);
             });
-            console.log('\n');
-            
+            let config = {columns: {
+                0: { alignment: 'center' },
+                1: { alignment: 'left' },
+                2: { alignment: 'right' },
+                3: { alignment: 'right' },
+                4: { alignment: 'right' },
+            }}
+            console.log(table(data, config));
             showOptions();
         }
     );
     
-}
-
-function addToInventory() {
-    inquirer.prompt([
-        {
-            type: 'number',
-            name: "id",
-            message: "Enter the product ID to which inventory is being added:"
-        },
-        {
-            type: 'number',
-            name: "qty",
-            message: "Enter the quantity being added:"
-        }
-    ]).then(function(response) {
-        connection.query(
-            "UPDATE products SET stock_quantity = stock_quantity + ? WHERE item_id = ?",
-            [response.qty, response.id],
-            function(err) {
-                if (err) throw err;
-                console.log(`Quantity ${response.qty} added to product ${response.id}.`);
-                console.log('\n');
-                
-                showOptions();
-            }
-        );
-    });
 }
 
 function createDepartment() {
     inquirer.prompt([
         {
             type: 'input',
-            name: "name",
-            message: "Enter the name of the new product:"
-        },
-        {
-            type: 'input',
             name: "dept",
-            message: "Enter the department:"
+            message: "Enter the name of the new department:"
         },
         {
             type: 'number',
-            name: "price",
-            message: "Enter the unit price:"
-        },
-        {
-            type: 'number',
-            name: "qty",
-            message: "Enter the initial stock quantity:"
+            name: "overhead",
+            message: "Enter the overhead cost for the department:"
         }
     ]).then(function(response) {
         connection.query(
-            "INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES (?,?,?,?)",
-            [response.name, response.dept, response.price, response.qty],
+            "INSERT INTO departments (department_name, overhead_costs) VALUES (?,?)",
+            [response.dept, response.overhead],
             function(err) {
                 if (err) throw err;
-                console.log("\nProduct added:\n".green);
-                console.log(`${"PRODUCT NAME".padEnd(25,' ')} ${"DEPARTMENT".padEnd(20,' ')}   ${"PRICE".padStart(6,' ')} ${"QTY".padStart(8,' ')}`.blue);
-                console.log("".padEnd(68,"-").bold);
-                console.log(`${response.name.padEnd(25,' ')} ${response.dept.padEnd(20,' ')} $ ${response.price.toFixed(2).padStart(6,' ')} ${response.qty.toString().padStart(8,' ')}`);
-                console.log('\n')
+                console.log(`\nNew department "${response.dept}" added.\n`.green);
                 
                 showOptions();
             }
