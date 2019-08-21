@@ -63,7 +63,7 @@ function showProducts() {
                             continueOrExit();
                         } else { // sufficient qty in stock
                             connection.query(
-                                "UPDATE products SET stock_quantity = stock_quantity - ? WHERE item_id = ?", [response.qty, response.id],
+                                "UPDATE products SET stock_quantity = stock_quantity - ?, product_sales = product_sales + ? WHERE item_id = ?", [response.qty, response.qty * res[0].price, response.id],
                                 function(err) {
                                     if (err) throw err;
                                     console.log("\nThank you for your purchase!".green + 
