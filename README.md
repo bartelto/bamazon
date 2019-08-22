@@ -29,7 +29,7 @@ MYSQL_PASSWORD=YOUR-PASSWORD-HERE
 ```
 - The three portals reside in the ```\customer```, ```\manager```, and ```\supervisor``` directories. To run any of the portal applications:
     - Type ```npm install``` to install modules needed for the app.
-    - Type ```node bamazon__________.js``` to run the portal.
+    - Type ```node bamazon__________.js``` (see the complete filenames above) to run the portal.
 
 ## Demo
 
