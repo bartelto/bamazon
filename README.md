@@ -15,7 +15,19 @@
 - Install [Node.js](https://nodejs.org/en/download/) and [MySQL](https://www.mysql.com/downloads/).
 - Download the project from GitHub to your local machine.
 - Open MySQL and use the files in ```/sql``` to create the needed database tables (```products-schema.sql``` and ```departments-schema.sql```) and (optionally) to seed the tables with some data (```products-seed.sql``` and ```departments-seed.sql```).
-- Use a command-line interface (CLI) to navigate inside the project directory. The three portals reside in the ```\customer```, ```\manager```, and ```\supervisor``` directories. To run any of the portal applications:
+- Use a command-line interface (CLI) to navigate inside the project directory. 
+- Create a file in the root directory called ```keys.js``` and give it the following contents:
+```
+exports.mysql = {
+  password: process.env.MYSQL_PASSWORD
+};
+```
+- Create another file in the root directory called ```.env``` and give it the following contents:
+```
+# MySQL password
+MYSQL_PASSWORD=YOUR-PASSWORD-HERE
+```
+- The three portals reside in the ```\customer```, ```\manager```, and ```\supervisor``` directories. To run any of the portal applications:
     - Type ```npm install``` to install modules needed for the app.
     - Type ```node bamazon__________.js``` to run the portal.
 
