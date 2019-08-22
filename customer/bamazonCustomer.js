@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-let keys = require("./keys.js");
+let keys = require("../keys.js");
 let mysql = require('mysql');
 let colors = require('colors');
 let inquirer = require('inquirer');
@@ -15,7 +15,8 @@ let connection = mysql.createConnection({
 
 connection.connect(function(err) {
     if (err) throw err;
-    console.log("Welcome to Bamazon!".yellow + "\nConnected as id " + connection.threadId + "\n");
+    console.log("\nWelcome to Bamazon!\n".yellow);
+    //console.log("Connected as id " + connection.threadId + "\n");
     showProducts();
 });
 

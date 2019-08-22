@@ -16,7 +16,8 @@ let connection = mysql.createConnection({
 
 connection.connect(function(err) {
     if (err) throw err;
-    console.log("Bamazon Supervisor Portal".cyan + "\nConnected as id " + connection.threadId + "\n");
+    console.log("\nBamazon Supervisor Portal\n".cyan);
+    //console.log("\nConnected as id " + connection.threadId + "\n");
     showOptions();
 });
 
